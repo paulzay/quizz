@@ -1,29 +1,38 @@
 import React from 'react'
+import {answerObject} from './App';
+import { Wrapper, ButtonWrapper } from './QuestionCard.styles';
 
 type QProps = {
   question: string;
   answers: string[];
-  callback: any;
-  userAnswer: any;
+  callback: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  userAnswer: answerObject | undefined;
   questionNumber: number;
   totalQuestions: number;
 }
 
 const QuestionCard: React.FC<QProps> = ({question,userAnswer,callback, answers, questionNumber, totalQuestions}) => {
-
+  
   return (
+  <Wrapper>
+    <p className='number'>
+      Question: {questionNumber} / {totalQuestions}
+    </p>
+    <p dangerouslySetInnerHTML={{ __html: question }} />
     <div>
-      <p className="number">Question: {questionNumber}/ {totalQuestions}</p>
-      <p dangerouslySetInnerHTML={{__html: question}}></p>
-      {
-        answers.map(answer => (
-          <div>
-            <button disabled={userAnswer} onClick={callback}></button>
-            <span dangerouslySetInnerHTML={{__html: answer}}></span>
-          </div>
-        ))
-      }
+      {answers?.map((answer) => (
+        <ButtonWrapper
+          key={answer}
+          correct={userAnswer?.correctAnswer === answer}
+          userClicked={userAnswer?.answer === answer}
+        >
+          <button disabled={userAnswer ? true : false} value={answer} onClick={callback}>
+            <span dangerouslySetInnerHTML={{ __html: answer }} />
+          </button>
+        </ButtonWrapper>
+      ))}
     </div>
+  </Wrapper>
   )
 }
 
